@@ -47,7 +47,7 @@ public class ShoppingCartServiceTest {
 
         ));
 
-        BigDecimal result = service.calculateTotalPrice(cart);
+        BigDecimal result = service.calculateTotalPriceByCategories(cart);
 
         Assertions.assertEquals(result, BigDecimal.valueOf(31.84).setScale(2, RoundingMode.HALF_UP));
     }

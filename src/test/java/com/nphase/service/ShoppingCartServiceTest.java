@@ -15,22 +15,22 @@ public class ShoppingCartServiceTest {
     private final ShoppingCartService service = new ShoppingCartService();
 
     @Test
-    public void calculatesPrice()  {
+    public void calculatesPrice() {
         ShoppingCart cart = new ShoppingCart(Arrays.asList(
-                new Product("Tea", BigDecimal.valueOf(5.0), 2,"basic"),
-                new Product("Coffee", BigDecimal.valueOf(6.5), 1,"basic")
+                new Product("Tea", BigDecimal.valueOf(5.0), 2, "basic"),
+                new Product("Coffee", BigDecimal.valueOf(6.5), 1, "basic")
         ));
 
         BigDecimal result = service.calculateTotalPrice(cart);
 
-        Assertions.assertEquals(result, BigDecimal.valueOf(16.5));
+        Assertions.assertEquals(result, BigDecimal.valueOf(16.5).setScale(2, RoundingMode.HALF_UP));
     }
 
     @Test
-    public void calculatesPriceWithDiscount()  {
+    public void calculatesPriceWithDiscount() {
         ShoppingCart cart = new ShoppingCart(Arrays.asList(
-                new Product("Tea", BigDecimal.valueOf(5.0), 5,"basic"),
-                new Product("Coffee", BigDecimal.valueOf(3.5), 3,"basic")
+                new Product("Tea", BigDecimal.valueOf(5.0), 5, "basic"),
+                new Product("Coffee", BigDecimal.valueOf(3.5), 3, "basic")
         ));
 
         BigDecimal result = service.calculateTotalPrice(cart);
@@ -39,15 +39,29 @@ public class ShoppingCartServiceTest {
     }
 
     @Test
-    public void calculateTotalPriceByCategories()  {
+    public void calculateTotalPriceByCategories() {
         ShoppingCart cart = new ShoppingCart(Arrays.asList(
-                new Product("Tea", BigDecimal.valueOf(5.3), 2,"drinks"),
-                new Product("Coffee", BigDecimal.valueOf(3.5), 2,"drinks"),
-        new Product("cheese", BigDecimal.valueOf(8), 2,"food")
+                new Product("Tea", BigDecimal.valueOf(5.3), 2, "drinks"),
+                new Product("Coffee", BigDecimal.valueOf(3.5), 2, "drinks"),
+                new Product("cheese", BigDecimal.valueOf(8), 2, "food")
 
         ));
 
         BigDecimal result = service.calculateTotalPriceByCategories(cart);
+
+        Assertions.assertEquals(result, BigDecimal.valueOf(31.84).setScale(2, RoundingMode.HALF_UP));
+    }
+
+    @Test
+    public void calculateTotalPriceByCategoriesWithConfig() {
+        ShoppingCart cart = new ShoppingCart(Arrays.asList(
+                new Product("Tea", BigDecimal.valueOf(5.3), 2, "drinks"),
+                new Product("Coffee", BigDecimal.valueOf(3.5), 2, "drinks"),
+                new Product("cheese", BigDecimal.valueOf(8), 2, "food")
+
+        ));
+
+        BigDecimal result = service.calculateTotalPriceByCategoriesWithConfig(cart, 3, 0.1);
 
         Assertions.assertEquals(result, BigDecimal.valueOf(31.84).setScale(2, RoundingMode.HALF_UP));
     }
